@@ -13,11 +13,9 @@ function Spot(name, position, x, y)
 end
 
 function spotClass:draw()
-  if mainScreen then
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.circle('fill', self.x, self.y, 20)
-    love.graphics.setColor(255, 255, 255)
-  end
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.circle('fill', self.x, self.y, 20)
+  love.graphics.setColor(255, 255, 255)
 end
 
 return Spot
