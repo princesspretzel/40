@@ -20,7 +20,4 @@ function spotClass:draw()
   end
 end
 
-function spotClass:update()
-end
-
 return Spot
