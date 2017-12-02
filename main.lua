@@ -10,6 +10,9 @@ aiFile = '/images/baseheartt.png'
 aiImage = love.graphics.newImage(aiFile)
 aiWidth, aiHeight = aiImage:getDimensions()
 
+-- start by entering, also solves the beginning deadlock problem
+door = Spot('door,', 1, 700, 700)
+
 function love.load()
   -- love.window.setTitle()
   love.window.setMode(0, 0)

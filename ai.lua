@@ -13,15 +13,15 @@ local spots = {
   Spot('vacuum', 7, 600, 500) 
 }
 local availableSpots = { }
-local paused = false
 
 function Ai(spot)
   loadSpots()
   local instance = {
     class = 'ai',
-    x = spot.x,
-    y = spot.y,
+    x = door.x,
+    y = door.y,
     destination = spot,
+    paused = false,
     stop = 0, -- no idea how to balance yet 
     variation = 1, -- rng lvl from 1 to length
     availableSpots = availableSpots,
@@ -56,27 +56,17 @@ function aiClass:draw()
 end
 
 function aiClass:update(dt)
-  --pausing at a destination spot
-  print('paused: ', paused)
-  print('self.stop: ', self.stop)
-  if paused then 
+  print('paused: ', self.paused)
+  if self.paused then --pausing at a destination spot
     self.stop = self.stop - dt
-  end
-  --movement to a destination spot
-  if (self.stop <= 0) then
-    paused = false
-    -- when the distance between the current center position and the destination is closed, choose the next destination
     -- self.stop will never actually be zero except when set
-    if (self.destination.x == self.x and self.destination.y == self.y and self.stop == 0) then
-      print('IN HERE')
-      if paused then
-        self.destination = self:nextSpot()
-      end
-      paused = true
-      self.stop = 10 * 60 --this function runs ~60 fps
+    if self.stop < 0 then
+      self.destination = self:nextSpot()
+      -- reset the clock
+      self.paused = false
+      self.stop = 0
     end
-    -- return the clock
-    self.stop = 0
+  else --movement to a destination spot
     -- close the distance between current position of the center and the destination
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
@@ -89,6 +79,11 @@ function aiClass:update(dt)
     end
     if (self.destination.y < self.y) then
       self.y = self.y - (self.variation)
+    end
+    -- when the distance between the current center position and the destination is closed, choose the next destination
+    if (self.destination.x == self.x and self.destination.y == self.y and self.stop == 0) then
+      self.paused = true
+      self.stop = 2 --this function runs ~60 fps
     end
   end
   -- when the "round" is over (all spots have been visited), start over
