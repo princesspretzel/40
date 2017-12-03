@@ -8,11 +8,6 @@ function Room(name)
   local instance = {
     class = 'room',
     name = name,
-    itemChoice = false,
-    choiceInProgress = false,
-    lastClickedItem = nil,
-    keepCount = 0,
-    giveCount = 0,
     backgroundColorR = 255,
     backgroundColorG = 255,
     backgroundColorB = 255,
@@ -25,6 +20,7 @@ function Room(name)
   return instance
 end
 
+-- TODO: could set everything back to "visible"
 function roomClass:loadFeatures(featuresTable)
   for idx, feature in ipairs(featuresTable) do
     table.insert(self.features, feature)
@@ -33,8 +29,6 @@ end
 
 function roomClass:loadRoom()
   -- reset counters per room
-  self.keepCount = 0
-  self.giveCount = 0
   if self.name == 'title' then
     love.window.setTitle('life instructions')
     self.backgroundColorR = 255
@@ -94,25 +88,9 @@ function roomClass:draw()
 end
 
 function roomClass:mouseCollision(x, y)
-  if self.itemChoice then
-    self.lastClickedItem:interpretChoiceClick(x, y)
-    self.itemChoice = false
-  else
-    for idx, feature in ipairs(self.features) do
-      if feature.choiceInProgress then
-        self.choiceInProgress = true
-      end
-    end
-    if (self.choiceInProgress ~= true) then
-      for idx, feature in ipairs(self.features) do
-        if feature.visible then
-          print('self.lastClickedItem: ', self.lastClickedItem)
-          self.lastClickedItem = feature:mouseCollision(x, y)
-          if self.lastClickedItem ~= nil then
-            self.itemChoice = true
-          end
-        end
-      end
+  for idx, feature in ipairs(self.features) do
+    if feature.visible then
+      feature:mouseCollision(x, y)
     end
   end
 end

@@ -1,13 +1,17 @@
 local featureClass = { }
 featureClass.__index = featureClass
- 
+
+-- I don't know why the x-axis of the mouse seems so off to me 
+local xWorkAround = 200
+
 function Feature(name, iFile, clickable, drawable, updatable, visible, x, y)
   local img = love.graphics.newImage(iFile)
   local w, h = img:getDimensions()
   local instance = {
     name = name,
     iFile = iFile, -- maybe get rid of this later
-    choiceInProgress = false,
+    itemLocked = false,
+    choicesLocked = true,
     clickable = clickable,
     drawable = drawable,
     updatable = updatable,
@@ -26,44 +30,82 @@ function featureClass:showItemChoices()
   love.graphics.setColor(0, 0, 0)
   love.graphics.print('choose what you want to do with the ', self.x, self.y - 10)
   love.graphics.print(self.name, self.x, self.y + 10)
-  love.graphics.print('keep it for yourself', self.x + self.w, self.y + 30)
-  love.graphics.print('give it to ybr', self.x + self.w, (self.y + 50))
-  love.graphics.print('leave it alone', self.x + self.w, self.y + 70)
+  love.graphics.print('keep it for yourself', (self.x + self.w + 10), (self.y + 50))
+  love.graphics.print('give it to ybr', (self.x + self.w + 10), (self.y + 100))
+  love.graphics.print('leave it alone', (self.x + self.w + 10), (self.y + 150))
   love.graphics.setColor(255, 255, 255)
 end
 
-function featureClass:interpretChoiceClick(x, y)
-  if ((x < self.x + self.w + 100) and (x > self.x - 100)) and ((y > self.y - 50) and (y < self.y + self.h + 50)) then
-    if ((y > self.y - 50) and (y < self.y + 40)) then
-      controller:egoBoost()
-      self.visible = false
+function featureClass:choiceClick(x, y)
+  if ((x + xWorkAround >= self.x + self.w) and (x < self.x + self.w + 175) and (y > self.y + 25) and (y < self.y + 175)) then
+    if ((y >= self.y + 25) and (y < self.y + 75)) then
+      print('chose keep it')
+      return 'keep'
     end
-    if ((y >= self.y + 40) and (y < self.y + 60)) then
-      door.itemCount = 1
-      self.visible = false
+    if ((y >= self.y + 75) and (y < self.y + 125)) then
+      print('chose give to ybr')
+      return 'give'
     end
-    self.choiceInProgress = false
+    if ((y >= self.y + 125) and (y < self.y + 175)) then
+      print('chose leave it alone')
+      return 'leave'
+    end
+    print('ERROR: we should never see this message if the math above is right')
   end
+end
+
+function featureClass:resolveChoiceClick(choice)
+  print('resolving choice')
+  if choice == 'keep' then
+    controller:egoBoost()
+    self.visible = false
+    return
+  end
+  if choice == 'give' then
+    door.itemCount = door.itemCount + 1
+    self.visible = false
+    return
+  end
+  if choice == 'leave' then
+    controller:egoControl()
+    return
+  end
+  print('ERROR: choice is invalid: ', choice)
 end
 
 function featureClass:draw()
   if self.drawable and self.visible then
     love.graphics.draw(self.img, self.x, self.y)
   end
-  if self.choiceinProgress and self.visible then
+  if self.itemLocked and self.visible then
     self:showItemChoices()
   end
 end
 
+-- setting and unsetting locks on the item and its choices
 function featureClass:mouseCollision(x, y)
-  if (self.clickable and (self.choiceInProgress ~= true)) then
-    if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
-      self.choiceinProgress = true
-      print('self returned to room class after item click: ', self.choiceinProgress)
-      return self
+  if self.clickable and self.visible then
+
+    -- if feature choices are unlocked
+    if self.choicesLocked ~= true then
+      print('choices are unlocked for ', self.name)
+      local choice = self:choiceClick(x, y) --check for choice click, contains conditional to figure out collision
+      self:resolveChoiceClick(choice) --resolve choice click
+      self.choicesLocked = true --lock choices
+      self.itemLocked = false --unlock item (except visiblility lock)
     end
+
+    -- if feature item is unlocked
+    if self.itemLocked ~= true then
+      print('item is unlocked for ', self.name)  
+      -- this conditional only checks for collisions between the mouse and the feature, NOT the choice list
+      if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
+        self.itemLocked = true --lock feature item
+        self.choicesLocked = false --unlock feature choices
+      end
+    end
+
   end
-  return nil
 end
 
 --idk

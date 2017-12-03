@@ -21,7 +21,7 @@ function Door(screen)
     currentRoom = room,
     unlockedRooms = { },
     metrics = { },
-    itemCount = 5,
+    itemCount = 0,
     x = gameWidth - w - 100,
     y = gameHeight - h - 100,
     w = w,
@@ -99,6 +99,7 @@ function doorClass:mouseCollision(x, y)
 end
 
 function doorClass:update(dt)
+  print('item count: ', self.itemCount)
   if self.currentRoom then
     if self.currentRoom.name == 'title' then
       self.x = 650
