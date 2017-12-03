@@ -6,13 +6,13 @@ controllerClass.__index = controllerClass
 local imgFiles = {
   '/images/head0t.png', '/images/head1t.png', '/images/head2t.png', '/images/head3t.png', '/images/head4t.png', '/images/head5t.png', '/images/head6t.png'
 }
-local head = Metric('head', 0, 3, table.getn(imgFiles))
+local head = Metric('head', 0, 2, table.getn(imgFiles))
 
 function Controller()
   -- give the door access to the heart metric
   table.insert(door.metrics, head)
   -- define the base image vars  
-  local img = love.graphics.newImage('/images/head3t.png')
+  local img = love.graphics.newImage('/images/head2t.png')
   local w, h = img:getDimensions() 
   local instance = {
     class = 'controller',

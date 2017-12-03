@@ -7,6 +7,7 @@ local imgFiles = { '/images/heart0t.png', '/images/baseheartt.png', '/images/hea
 local heart = Metric('heart', 0, 1, (table.getn(imgFiles) - 1))
 
 local availableSpots = { }
+local initialUnclickedStopsBeforeHeartDecrease = 7
 
 function Ai()
   -- create a manipulable copy of the features of the main room
@@ -23,6 +24,7 @@ function Ai()
     paused = false,
     stop = 0,
     variation = 1, --TODO: use this? rng lvl from 1 to length
+    maxUnclickedStopsBeforeHeartDecrease = initialUnclickedStopsBeforeHeartDecrease,
     availableSpots = availableSpots,
     lastHeartIncrease = 0,
     x = gameWidth,
@@ -49,10 +51,12 @@ function aiClass:findSpot(spot)
   end
 end
 
--- TODO: not 7, a function of ego FROM TITLE SCREEN
 -- if # stops go by and you don't do anything nice, you lose a heart
 function aiClass:heartCheck()
-  if self.lastHeartIncrease > 7 then
+  -- factor in the difference between the ego and the feelings
+  self.maxUnclickedStopsBeforeHeartDecrease = (initialUnclickedStopsBeforeHeartDecrease - door:howManyStopsCanBeIgnored())
+  print('self.maxUnclickedStopsBeforeHeartDecrease: ', self.maxUnclickedStopsBeforeHeartDecrease)
+  if self.lastHeartIncrease > self.maxUnclickedStopsBeforeHeartDecrease then
     self:heartDecrease()
   end
 end

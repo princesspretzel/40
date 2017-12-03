@@ -33,6 +33,22 @@ function Door(screen)
   return instance
 end
 
+-- returns the number of stops can go by before ai loses a heart
+function doorClass:howManyStopsCanBeIgnored()
+  print('checking how long you can ignore ai')
+  for idx, metric in ipairs(self.metrics) do
+    if metric.metricType == 'head' then
+      ego = metric.level
+    end
+    if metric.metricType == 'heart' then
+      feeling = metric.level
+    end
+  end
+  print('ego metric level: ', ego)
+  print('feeling metric level: ', feeling)
+  return (ego - feeling)
+end
+
 -- TODO: return whether you are giving a treasure or an affection
 -- decide whether or not you can increase the heart level
 function doorClass:canGiveHeart()
