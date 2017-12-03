@@ -3,7 +3,8 @@ local Feature = require('feature')
 -- img, clickable, drawable, updatable, visible, x, y
 local Rooms = {
   titleFeatures = {
-    Feature('house', '/images/houset.png', false, true, false, true, 200, 50)
+    Feature('house', '/images/houset.png', false, true, false, true, 300, 50)
+    Feature('postcard', '/images/postcardt.png'), false, true, false, true, 50, 100)
   },
   mainFeatures = {
     Feature('tv', '/images/placeholdert.png', false, true, false, true, 200, 500),

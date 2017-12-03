@@ -101,7 +101,6 @@ end
 function doorClass:update(dt)
   if self.currentRoom then
     if self.currentRoom.name == 'title' then
-      print('in here')
       self.x = 400
       self.y = 500
     else
