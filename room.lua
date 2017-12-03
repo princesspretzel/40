@@ -9,6 +9,7 @@ function Room(name)
     class = 'room',
     name = name,
     itemChoice = false,
+    choiceInProgress = false,
     lastClickedItem = nil,
     keepCount = 0,
     giveCount = 0,
@@ -98,10 +99,18 @@ function roomClass:mouseCollision(x, y)
     self.itemChoice = false
   else
     for idx, feature in ipairs(self.features) do
-      if feature.visible then
-        self.lastClickedItem = feature:mouseCollision(x, y)
-        if self.lastClickedItem ~= nil then
-          self.itemChoice = true
+      if feature.choiceInProgress then
+        self.choiceInProgress = true
+      end
+    end
+    if (self.choiceInProgress ~= true) then
+      for idx, feature in ipairs(self.features) do
+        if feature.visible then
+          print('self.lastClickedItem: ', self.lastClickedItem)
+          self.lastClickedItem = feature:mouseCollision(x, y)
+          if self.lastClickedItem ~= nil then
+            self.itemChoice = true
+          end
         end
       end
     end

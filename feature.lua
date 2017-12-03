@@ -59,6 +59,7 @@ function featureClass:mouseCollision(x, y)
   if (self.clickable and (self.choiceInProgress ~= true)) then
     if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
       self.choiceinProgress = true
+      print('self returned to room class after item click: ', self.choiceinProgress)
       return self
     end
   end

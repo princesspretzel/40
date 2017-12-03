@@ -101,7 +101,7 @@ end
 function doorClass:update(dt)
   if self.currentRoom then
     if self.currentRoom.name == 'title' then
-      self.x = 400
+      self.x = 650
       self.y = 500
     else
       self.x = gameWidth - self.w - 100

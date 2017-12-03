@@ -3,8 +3,8 @@ local Feature = require('feature')
 -- img, clickable, drawable, updatable, visible, x, y
 local Rooms = {
   titleFeatures = {
-    Feature('house', '/images/houset.png', false, true, false, true, 300, 50)
-    Feature('postcard', '/images/postcardt.png'), false, true, false, true, 50, 100)
+    Feature('house', '/images/houset.png', false, true, false, true, 450, 50),
+    Feature('postcard', '/images/postcardt.png', false, true, false, true, 50, 100)
   },
   mainFeatures = {
     Feature('tv', '/images/placeholdert.png', false, true, false, true, 200, 500),
@@ -32,7 +32,7 @@ local Rooms = {
     Feature('dunes', '/images/dunest.png', false, true, false, true, 200, 200),
     Feature('camel', '/images/camelt.png', false, true, false, true, 300, 300),
     Feature('uncute cactus', '/images/uncutecactust.png', false, true, false, true, 950, 50),
-    Feature('cute cactus', '/images/cutecactust.png', true, true, true, true, 100, 150),
+    Feature('cute cactus', '/images/cutecactust.png', true, true, true, true, 150, 250),
     Feature('shell', '/images/shellt.png', true, true, true, true, 750, 600)
   }, tundraFeatures = {
     Feature('bigger gray blob', '/images/biggergrayblobt.png', false, true, false, true, 700, 100),
