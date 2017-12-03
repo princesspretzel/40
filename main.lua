@@ -1,83 +1,70 @@
 local Ai = require('ai')
 local Controller = require('controller')
-local Spot = require('spot')
+local Feature = require('feature')
 local State = require('state')
 
-clickables = { }
-drawables = { }
-updatables = { }
-
-screens = { 
-  'main',
-  'rainbow', --6 only win condition
-  'field', --5/6
-  'desert', --3/4
-  'tundra', --1/2
-  'void' --0 (lose condition)
-}
-
--- ai presets
-aiBaseFile = '/images/baseheartt.png'
-aiImage = love.graphics.newImage(aiBaseFile)
-aiWidth, aiHeight = aiImage:getDimensions()
-
---controller presets
-controllerBaseFile = '/images/baseheadt.png'
-controllerImage = love.graphics.newImage(controllerBaseFile)
-controllerWidth, controllerHeight = controllerImage:getDimensions() 
-
-gameWidth, gameHeight = love.graphics.getDimensions()
-state = State('rainbow')
-
 function love.load()
-  -- love.window.setTitle()
+  -- game state variables
+  love.window.setTitle('house')
   love.window.setMode(900, 900)
   love.graphics.setBackgroundColor(255, 255, 255)
+  gameWidth, gameHeight = love.graphics.getDimensions()
+  state = State('main')
 
-  local controller = Controller()
-  -- start by entering through door and walking to first spot (center of screen) solves the beginning deadlock problem
-  local firstSpot = Spot('first', 0, ((state.width/2) - (aiWidth/2)), ((state.height/2) - (aiHeight/2)))
-  local ai = Ai(firstSpot)
-  local door = Spot('door,', 1, 700, 700)
-  ai.x = door.x
-  ai.x = door.y
+  -- TODO: add locks to rooms
+  screens = { 
+    'main',
+    'rainbow', --6 only win condition
+    'field', --5/6
+    'desert', --3/4
+    'tundra', --1/2
+    'void' --0 (lose condition)
+  }
 
-  table.insert(drawables, ai)
-  table.insert(updatables, ai)
-  table.insert(clickables, ai)
+  -- ai presets
+  aiBaseFile = '/images/baseheartt.png'
+  aiImage = love.graphics.newImage(aiBaseFile)
+  aiWidth, aiHeight = aiImage:getDimensions()
+
+  -- controller presets
+  controllerBaseFile = '/images/baseheadt.png'
+  controllerImage = love.graphics.newImage(controllerBaseFile)
+  controllerWidth, controllerHeight = controllerImage:getDimensions() 
+  -- the door has to be available everywhere
+  doorFile = '/images/doort.png'
+  doorImage = love.graphics.newImage(doorFile)
+  doorWidth, doorHeight = doorImage:getDimensions()
+  -- clickable, drawable, not updatable, visible
+  door = Feature('door', doorFile, true, true, false, true, state.width - 300, state.height - 300)
   
-  table.insert(drawables, controller)
-  table.insert(updatables, controller)
+  -- add special actors
+  ai = Ai()
+  controller = Controller()
 end
 
 function love.draw()
-  if state.room == 'main' then
-    for idx, drawable in ipairs(drawables) do
-      drawable:draw()
-    end
-  else
-    state:draw()
+  state:draw()
+  if (state.room == 'main' or state.room == nil) then
+    ai:draw()
+    controller:draw()
+    door:draw()
   end
 end
 
 function love.mousepressed(x, y, button, istouch)
-  if state.room == 'main' then
+  state:mouseCollision(x, y)
+  if (state.room == 'main' or state.room == nil) then
     if button == 1 then
-      for idx, clickable in ipairs(clickables) do
-        clickable:mouseCollision(x, y)
-      end
+      ai:mouseCollision(x, y)
+      door:mouseCollision(x, y)
     end
-  else
-    state:mouseCollision(x, y)
   end
 end
 
 function love.update(dt)
-  if state.room == 'main' then
-    for idx, updatable in ipairs(updatables) do
-      updatable:update(dt)
-    end
-  else
-    state:update(dt)
+  state:update(dt)
+  if (state.room == 'main' or state.room == nil) then
+    ai:update(dt)
+    controller:update(dt)
   end
 end

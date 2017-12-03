@@ -1,32 +1,21 @@
 local Metric = require('metric')
-local Spot = require('spot')
 
 local aiClass = { }
 aiClass.__index = aiClass
 
 local heart = Metric('heart', 0)
-local spots = {
-  Spot('computer', 1, 200, 500),
-  Spot('bed', 2, 400, 100),
-  Spot('trash', 3, 100, 300),
-  Spot('laundry', 4, 200, 400),
-  Spot('oven', 5, 500, 300),
-  Spot('fridge', 6, 600, 200), 
-  Spot('vacuum', 7, 600, 500) 
-}
 local imgFiles = {
   '/images/heart0t.png', '/images/heart1t.png', '/images/heart2t.png', '/images/heart3t.png', '/images/heart4t.png', '/images/heart5t.png', '/images/heart6t.png'
 }
-
 local availableSpots = { }
 
-function Ai(destination)
+function Ai()
   loadSpots()
   local instance = {
     class = 'ai',
-    x = 0,
-    y = 0,
-    destination = destination,
+    x = gameWidth, --gameWidth is globally available
+    y = gameHeight, --gameHeight is globally available
+    destination = door, --door is globally available
     iFile = aiBaseFile,
     paused = false,
     stop = 0, -- no idea how to balance yet 
@@ -39,9 +28,19 @@ function Ai(destination)
 end
 
 function loadSpots()
-  for n = 1, table.getn(spots) do
-    table.insert(drawables, spots[n])
-    table.insert(availableSpots, spots[n])
+  -- state is globally available
+  for idx, feature in ipairs(state.currentRoom.features) do
+    table.insert(availableSpots, feature)
+  end
+end
+
+function aiClass:findSpot(spot)
+  for idx, feature in ipairs(self.availableSpots) do
+    if spot.name == feature.name then
+      print('spot name: ', spot.name)
+      print('feature name: ', feature.name)
+      return idx
+    end
   end
 end
 
@@ -50,12 +49,16 @@ end
 function aiClass:nextSpot()
   print('number of available spots: ', table.getn(self.availableSpots))
   print('moving towards ', self.destination.name)
+
   self:removeLastDestination()
   return self.availableSpots[love.math.random(table.getn(self.availableSpots))]
 end
 
 function aiClass:removeLastDestination()
-  table.remove(self.availableSpots, self.destination.position)
+  local idx = self:findSpot(self.destination)
+  if idx then
+    table.remove(self.availableSpots, idx)
+  end
 end
 
 function aiClass:movement(dt)
@@ -70,6 +73,10 @@ function aiClass:movement(dt)
     end
   else --movement to a destination spot
     -- close the distance between current position of the center and the destination
+    print('self.destination.x: ', self.destination.x)
+    print('self.destination.y: ', self.destination.y)
+    print('self.x: ', self.x)
+    print('self.y: ', self.y)
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
     end
@@ -85,7 +92,7 @@ function aiClass:movement(dt)
     -- when the distance between the current center position and the destination is closed, choose the next destination
     if (self.destination.x == self.x and self.destination.y == self.y and self.stop == 0) then
       self.paused = true
-      self.stop = 1 --seconds, this function runs ~60 fps
+      self.stop = 2 --seconds, this function runs ~60 fps
     end
   end
   -- when the "round" is over (all spots have been visited), start over

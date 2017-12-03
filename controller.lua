@@ -24,7 +24,6 @@ function controllerClass:draw()
   local img = love.graphics.newImage(self.iFile)
   local imgWidth, _ = img:getDimensions() 
   love.graphics.draw(img, self.x, self.y)
-  love.graphics.setColor(0, 0, 0)
   love.graphics.print(self.thinkingText, (self.x + 10 + imgWidth), self.y + 10, 0, 5)
 end
 
