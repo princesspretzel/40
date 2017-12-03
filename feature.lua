@@ -30,24 +30,21 @@ function featureClass:showItemChoices()
   love.graphics.setColor(0, 0, 0)
   love.graphics.print('choose what you want to do with the ', self.x, self.y - 10)
   love.graphics.print(self.name, self.x, self.y + 10)
-  love.graphics.print('keep it for yourself', (self.x + self.w + 10), (self.y + 50))
-  love.graphics.print('give it to ybr', (self.x + self.w + 10), (self.y + 100))
-  love.graphics.print('leave it alone', (self.x + self.w + 10), (self.y + 150))
+  love.graphics.print('keep it for yourself', (self.x + self.w + 10), (self.y + 40))
+  love.graphics.print('give it to ybr later', (self.x + self.w + 10), (self.y + 70))
+  love.graphics.print('gaze upon it', (self.x + self.w + 10), (self.y + 100))
   love.graphics.setColor(255, 255, 255)
 end
 
 function featureClass:choiceClick(x, y)
-  if ((x + xWorkAround >= self.x + self.w) and (x < self.x + self.w + 175) and (y > self.y + 25) and (y < self.y + 175)) then
-    if ((y >= self.y + 25) and (y < self.y + 75)) then
-      print('chose keep it')
+  if ((x + xWorkAround >= self.x + self.w) and (x < self.x + self.w + 115) and (y > self.y + 25) and (y < self.y + 115)) then
+    if ((y >= self.y + 25) and (y < self.y + 55)) then
       return 'keep'
     end
-    if ((y >= self.y + 75) and (y < self.y + 125)) then
-      print('chose give to ybr')
+    if ((y >= self.y + 55) and (y < self.y + 85)) then
       return 'give'
     end
-    if ((y >= self.y + 125) and (y < self.y + 175)) then
-      print('chose leave it alone')
+    if ((y >= self.y + 85) and (y < self.y + 115)) then
       return 'leave'
     end
     print('ERROR: we should never see this message if the math above is right')

@@ -43,7 +43,7 @@ function roomClass:loadRoom()
     self:loadFeatures(RoomFeatures.mainFeatures)
   end
   if self.name == 'rainbow' then
-    love.window.setTitle('o many are the rewards of yanking your soul back from narcissism instincts')
+    love.window.setTitle('you can care for others as you care for yourself')
     self.backgroundColorR = 0
     self.backgroundColorG = 0
     self.backgroundColorG = 200
@@ -57,14 +57,14 @@ function roomClass:loadRoom()
     self:loadFeatures(RoomFeatures.fieldFeatures)
   end
   if self.name == 'desert' then
-    love.window.setTitle('in the desert, you can remember your name cuz there ain\'t no one there for to give ukraine')
+    love.window.setTitle('the desert it has its charms and its challenges')
     self.backgroundColorR = 230
     self.backgroundColorG = 240
     self.backgroundColorB = 0 
     self:loadFeatures(RoomFeatures.desertFeatures)
   end 
   if self.name == 'tundra' then
-    love.window.setTitle('The Tundra')
+    love.window.setTitle('The Tundra: sure is chilly and a barren wasteland out here!')
     self.backgroundColorR = 200
     self.backgroundColorG = 200
     self.backgroundColorB = 200 
