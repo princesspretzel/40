@@ -12,9 +12,9 @@ function Door(screen)
   -- load the first room
   local room = Room(screen)
   room:loadRoom()
-  -- define the base image vars  
+  -- define the base image vars
   local img = love.graphics.newImage('/images/doort.png')
-  local w, h = img:getDimensions()  
+  local w, h = img:getDimensions()
   -- create the door instance
   local instance = {
     class = 'door',
@@ -22,8 +22,8 @@ function Door(screen)
     unlockedRooms = { },
     metrics = { },
     itemCount = 5,
-    x = 600,
-    y = 600,
+    x = gameWidth - w - 100,
+    y = gameHeight - h - 100,
     w = w,
     h = h,
     img = img
@@ -32,15 +32,20 @@ function Door(screen)
   return instance
 end
 
-function doorClass:giveHeart()
-  local egoLevel
+-- decide whether or not you can increase the heart level
+function doorClass:canGiveHeart()
   for idx, metric in ipairs(self.metrics) do
     if metric.metricType == 'head' then
-      egoLevel = metric.level
-      print('ego level: ', egoLevel)
+      if metric.level <= (metric.maxLevel/2) then
+        return true
+      end
+      if self.itemCount > 0 then
+        self.itemCount = self.itemCount - 1
+        return true
+      end
+      return false
     end
   end
-  if egoLevel < loserLevel
 end
 
 -- needs to balance heart metric and locked rooms to give you an option

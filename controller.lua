@@ -80,7 +80,7 @@ function controllerClass:draw()
 end
 
 function controllerClass:update()
-  self:textChange()
+  self:textChangeItemChoice()
 end
 
 return Controller

@@ -20,7 +20,7 @@ end
 
 function metricClass:downLevel(delta)
   if self.level > self.minLevel then
-    self.level = self.level + delta
+    self.level = self.level - delta
   end
 end
 

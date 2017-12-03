@@ -3,10 +3,8 @@ local Metric = require('metric')
 local aiClass = { }
 aiClass.__index = aiClass
 
-local imgFiles = {
-  '/images/heart0t.png', '/images/heart1t.png', '/images/heart2t.png', '/images/heart3t.png', '/images/heart4t.png', '/images/heart5t.png', '/images/heart6t.png'
-}
-local heart = Metric('heart', 0, 0, table.getn(imgFiles))
+local imgFiles = { '/images/heart0t.png', '/images/baseheartt.png', '/images/heart1t.png', '/images/heart2t.png', '/images/heart3t.png', '/images/heart4t.png', '/images/heart5t.png', '/images/heart6t.png' }
+local heart = Metric('heart', 0, 1, (table.getn(imgFiles) - 1))
 
 local availableSpots = { }
 
@@ -26,6 +24,7 @@ function Ai()
     stop = 0, --no idea how to balance yet 
     variation = 1, --rng lvl from 1 to length
     availableSpots = availableSpots,
+    lastHeartIncrease = 0,
     x = gameWidth, --gameWidth is globally available
     y = gameHeight, --gameHeight is globally available
     w = w,
@@ -51,12 +50,39 @@ function aiClass:findSpot(spot)
   end
 end
 
+-- TODO: not 7, a function of ego
+-- if 7 stops go by and you don't do anything nice, you lose a heart
+function aiClass:heartCheck()
+  if self.lastHeartIncrease > 7 then
+    self:heartDecrease()
+  end
+end
+
+function aiClass:heartDecrease()
+  if ((heart.level - 1) >= 0) then
+    heart:downLevel(1)
+    local iFile = imgFiles[heart.level + 1]
+    self.img = love.graphics.newImage(iFile)
+    self.lastHeartIncrease = 0
+  end
+end
+
+function aiClass:heartIncrease()
+  if (heart.level + 1 < table.getn(imgFiles)) then
+    heart:upLevel(1)
+    local iFile = imgFiles[heart.level + 1]
+    self.img = love.graphics.newImage(iFile)
+    self.lastHeartIncrease = 0
+  end
+end
+
 -- choose a spot that is not the current spot, or one that has already been visited
 function aiClass:nextSpot()
   print('number of available spots: ', table.getn(self.availableSpots))
   print('moving towards ', self.destination.name)
 
   self:removeLastDestination()
+  self.lastHeartIncrease = self.lastHeartIncrease + 1 
   return self.availableSpots[love.math.random(table.getn(self.availableSpots))]
 end
 
@@ -117,14 +143,8 @@ function aiClass:mouseCollision(x, y)
   if ((y <= (self.y + self.h)) and (y >= self.y)) then
     yClick = true
   end
-  if xClick and yClick and (door.itemCount > 0 or door:getEgo() < 4) and self.paused then
-    -- TODO: make this more variable
-    if (heart.level < table.getn(imgFiles)) then
-      heart:upLevel(1)
-      door.itemCount = door.itemCount - 1
-      local iFile = imgFiles[heart.level + 1]
-      self.img = love.graphics.newImage(iFile)
-    end
+  if xClick and yClick and door:canGiveHeart() and self.paused then
+    self:heartIncrease()
   end
 end
 
@@ -137,6 +157,7 @@ end
 function aiClass:update(dt)
   if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     self:movement(dt)
+    self:heartCheck()
   end
 end
 

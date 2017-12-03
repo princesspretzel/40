@@ -75,9 +75,9 @@ function roomClass:loadRoom()
   end 
   if self.name == 'void' then
     love.window.setTitle('this the void from which there is no return')
-    self.backgroundColorR = 255
-    self.backgroundColorG = 255
-    self.backgroundColorB = 255
+    self.backgroundColorR = 0
+    self.backgroundColorG = 0
+    self.backgroundColorB = 0
     self:loadFeatures(RoomFeatures.voidFeatures)
   end
 end
