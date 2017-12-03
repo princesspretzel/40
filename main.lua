@@ -10,7 +10,7 @@ function love.load()
   gameWidth, gameHeight = love.graphics.getDimensions()
   
   -- globally available actors
-  door = Door('main')
+  door = Door('title')
   ai = Ai()
   controller = Controller()
 end

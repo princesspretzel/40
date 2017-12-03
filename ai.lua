@@ -50,8 +50,8 @@ function aiClass:findSpot(spot)
   end
 end
 
--- TODO: not 7, a function of ego
--- if 7 stops go by and you don't do anything nice, you lose a heart
+-- TODO: not 7, a function of ego FROM TITLE SCREEN
+-- if # stops go by and you don't do anything nice, you lose a heart
 function aiClass:heartCheck()
   if self.lastHeartIncrease > 7 then
     self:heartDecrease()
@@ -107,8 +107,8 @@ function aiClass:movement(dt)
   --movement to a destination spot
   else
     -- close the distance between current position of the center and the destination
-    print('self.destination.x: ', self.destination.x)
-    print('self.destination.y: ', self.destination.y)
+    -- print('self.destination.x: ', self.destination.x)
+    -- print('self.destination.y: ', self.destination.y)
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
     end

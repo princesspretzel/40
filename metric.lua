@@ -3,6 +3,7 @@ metricClass.__index = metricClass
  
 function Metric(metricType, minLevel, startLevel, maxLevel)
   local instance = {
+    delta = 1,
     metricType = metricType,
     minLevel = minLevel,
     level = startLevel,
@@ -12,15 +13,23 @@ function Metric(metricType, minLevel, startLevel, maxLevel)
   return instance
 end
 
+-- pass a new delta or use the instance's (default)
 function metricClass:upLevel(delta)
   if self.level < self.maxLevel then
-    self.level = self.level + delta
+    if delta then
+      self.level = self.level + delta
+    else
+      self.level = self.level + self.delta
+    end
   end
 end
-
 function metricClass:downLevel(delta)
   if self.level > self.minLevel then
-    self.level = self.level - delta
+    if delta then
+      self.level = self.level - delta
+    else
+      self.level = self.level - self.delta
+    end
   end
 end
 

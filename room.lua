@@ -8,6 +8,8 @@ function Room(name)
   local instance = {
     class = 'room',
     name = name,
+    itemChoice = false,
+    lastClickedItem = nil,
     keepCount = 0,
     giveCount = 0,
     backgroundColorR = 255,
@@ -37,6 +39,7 @@ function roomClass:loadRoom()
     self.backgroundColorR = 255
     self.backgroundColorG = 255
     self.backgroundColorB = 255
+    self:loadFeatures(RoomFeatures.titleFeatures)
   end
   if self.name == 'main' then
     love.window.setTitle('you are inside your house, hanging out with your beautiful roommate')
@@ -46,7 +49,7 @@ function roomClass:loadRoom()
     self:loadFeatures(RoomFeatures.mainFeatures)
   end
   if self.name == 'rainbow' then
-    love.window.setTitle('o how many are the rewards of yanking your soul back from your ego')
+    love.window.setTitle('o many are the rewards of yanking your soul back from narcissism instincts')
     self.backgroundColorR = 0
     self.backgroundColorG = 0
     self.backgroundColorG = 200
@@ -90,10 +93,18 @@ function roomClass:draw()
 end
 
 function roomClass:mouseCollision(x, y)
-  print('room mouse collision')
-  -- TODO: resolve keep and give clicks, update metrics
-  for idx, feature in ipairs(self.features) do
-    feature:mouseCollision(x, y)
+  if self.itemChoice then
+    self.lastClickedItem:interpretChoiceClick(x, y)
+    self.itemChoice = false
+  else
+    for idx, feature in ipairs(self.features) do
+      if feature.visible then
+        self.lastClickedItem = feature:mouseCollision(x, y)
+        if self.lastClickedItem ~= nil then
+          self.itemChoice = true
+        end
+      end
+    end
   end
 end
 

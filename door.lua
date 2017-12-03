@@ -32,6 +32,7 @@ function Door(screen)
   return instance
 end
 
+-- TODO: return whether you are giving a treasure or an affection
 -- decide whether or not you can increase the heart level
 function doorClass:canGiveHeart()
   for idx, metric in ipairs(self.metrics) do
@@ -99,6 +100,14 @@ end
 
 function doorClass:update(dt)
   if self.currentRoom then
+    if self.currentRoom.name == 'title' then
+      print('in here')
+      self.x = 400
+      self.y = 500
+    else
+      self.x = gameWidth - self.w - 100
+      self.y = gameHeight - self.h - 100
+    end
     self.currentRoom:update(dt)
   end
 end

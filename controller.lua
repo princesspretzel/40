@@ -6,13 +6,13 @@ controllerClass.__index = controllerClass
 local imgFiles = {
   '/images/head0t.png', '/images/head1t.png', '/images/head2t.png', '/images/head3t.png', '/images/head4t.png', '/images/head5t.png', '/images/head6t.png'
 }
-local head = Metric('head', 0, (table.getn(imgFiles)/2), table.getn(imgFiles))
+local head = Metric('head', 0, 3, table.getn(imgFiles))
 
 function Controller()
   -- give the door access to the heart metric
   table.insert(door.metrics, head)
   -- define the base image vars  
-  local img = love.graphics.newImage('/images/baseheadt.png')
+  local img = love.graphics.newImage('/images/head3t.png')
   local w, h = img:getDimensions() 
   local instance = {
     class = 'controller',
@@ -27,8 +27,23 @@ function Controller()
   return instance
 end
 
-function controllerClass:imageUpdate()
-  self.img = love.graphics.newImage(imgFiles[head.level + 1])
+function controllerClass:egoBoost()
+  if ((head.level + 1) < table.getn(imgFiles)) then
+    head:upLevel(1)
+    print('head level: ', head.level)
+    local iFile = imgFiles[head.level + 1]
+    print('iFile: ', iFile)
+    print('length of image files: ', table.getn(imgFiles))
+    self.img = love.graphics.newImage(iFile)
+  end
+end
+
+function controllerClass:egoControl()
+  if (head.level > 0) then
+    head:downLevel(1)
+    local iFile = imgFiles[head.level - 1]
+    self.img = love.graphics.newImage(iFile)
+  end
 end
 
 -- different text if you don't pick anything up or keep it
