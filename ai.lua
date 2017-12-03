@@ -31,7 +31,8 @@ function Ai()
     y = gameHeight,
     w = w,
     h = h,
-    img = img
+    img = img,
+    text = nil
   }
   setmetatable(instance, aiClass)
   return instance
@@ -49,6 +50,18 @@ function aiClass:findSpot(spot)
       return idx
     end
   end
+end
+
+function aiClass:setHappyText()
+  self.text = 'it\'s fun to do this together'
+end
+
+function aiClass:setSadText()
+  self.text = 'i don\'t want do this with you right now'
+end
+
+function aiClass:unsetText()
+  self.text = nil
 end
 
 -- if # stops go by and you don't do anything nice, you lose a heart
@@ -85,6 +98,7 @@ function aiClass:nextSpot()
   print('moving towards ', self.destination.name)
 
   self:removeLastDestination()
+  self:unsetText()
   self.lastHeartIncrease = self.lastHeartIncrease + 1 
   return self.availableSpots[love.math.random(table.getn(self.availableSpots))]
 end
@@ -146,14 +160,24 @@ function aiClass:mouseCollision(x, y)
   if ((y <= (self.y + self.h)) and (y >= self.y)) then
     yClick = true
   end
-  if xClick and yClick and door:canGiveHeart() and self.paused then
-    self:heartIncrease()
+  if xClick and yClick and self.paused then
+    if door:canGiveHeart() then
+      self:heartIncrease()
+      self:setHappyText()
+    else
+      self:setSadText()
+    end
   end
 end
 
 function aiClass:draw()
   if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     love.graphics.draw(self.img, self.x, self.y)
+    if self.text then
+      love.graphics.setColor(0, 0, 0)
+      love.graphics.print(self.text, self.x + self.w - 10, self.y + 40)
+      love.graphics.setColor(255, 255, 255)
+    end
   end
 end
 

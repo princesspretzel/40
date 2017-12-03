@@ -86,11 +86,7 @@ end
 
 function controllerClass:draw()
   love.graphics.draw(self.img, self.x, self.y)
-  -- local font = love.graphics.newFont('/fonts/VCR_OSD_MONO_1.001.ttf')
-  -- local font = love.graphics.newFont('/fonts/KeeponTruckin.ttf')
-  -- local text = love.graphics.newText( font, self.thinkingText )
   love.graphics.setColor(0, 0, 0)
-  -- love.graphics.draw(text, self.x + self.w - 10, self.y + 40)
   love.graphics.print(self.thinkingText, self.x + self.w - 10, self.y + 40)
   love.graphics.setColor(255, 255, 255)
 end
