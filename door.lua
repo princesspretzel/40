@@ -4,6 +4,9 @@ local Room = require('room')
 local doorClass = { }
 doorClass.__index = doorClass
 
+local doorOpenSound = love.audio.newSource('/sounds/close_door_1.mp3')
+local doorLockedSound = love.audio.newSource('/sounds/door_lock.mp3')
+
 local screensByHeartCount = {'void', 'tundra', 'tundra', 'desert', 'desert', 'field', 'field', 'rainbow'}
 
 function Door(screen)
@@ -91,8 +94,13 @@ function doorClass:mouseCollision(x, y)
     self.currentRoom:mouseCollision(x, y)
   end
   if self:isDoorClicked(x, y) then
-    local option = self:availableRoom()
-    self:enterRoom(option)
+    if self.currentRoom.name == 'void' then
+      doorLockedSound:play()
+    else
+      doorOpenSound:play()
+      local option = self:availableRoom()
+      self:enterRoom(option)
+    end
   end
 end
 
