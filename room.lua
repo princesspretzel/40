@@ -28,7 +28,6 @@ function roomClass:loadFeatures(featuresTable)
 end
 
 function roomClass:loadRoom()
-  -- reset counters per room
   if self.name == 'title' then
     love.window.setTitle('life instructions')
     self.backgroundColorR = 255

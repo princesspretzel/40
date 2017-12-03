@@ -4,8 +4,6 @@ local Room = require('room')
 local doorClass = { }
 doorClass.__index = doorClass
 
--- 0 to 7, so need to -1 for 1-indexing
--- void is lose condition, rainbow is win condition
 local screensByHeartCount = {'void', 'tundra', 'tundra', 'desert', 'desert', 'field', 'field', 'rainbow'}
 
 function Door(screen)
@@ -99,11 +97,10 @@ function doorClass:mouseCollision(x, y)
 end
 
 function doorClass:update(dt)
-  print('item count: ', self.itemCount)
   if self.currentRoom then
     if self.currentRoom.name == 'title' then
-      self.x = 650
-      self.y = 500
+      self.x = 520
+      self.y = 550
     else
       self.x = gameWidth - self.w - 100
       self.y = gameHeight - self.h - 100

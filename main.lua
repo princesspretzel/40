@@ -25,7 +25,7 @@ end
 
 function love.mousepressed(x, y, button, istouch)
   if button == 1 then
-  door:mouseCollision(x, y)
+    door:mouseCollision(x, y)
     if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
       ai:mouseCollision(x, y)
     end

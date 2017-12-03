@@ -19,18 +19,17 @@ function Ai()
   -- create the ai instance
   local instance = {
     class = 'ai',
-    destination = door, --door is globally available
+    destination = door,
     paused = false,
-    stop = 0, --no idea how to balance yet 
-    variation = 1, --rng lvl from 1 to length
+    stop = 0,
+    variation = 1, --TODO: use this? rng lvl from 1 to length
     availableSpots = availableSpots,
     lastHeartIncrease = 0,
-    x = gameWidth, --gameWidth is globally available
-    y = gameHeight, --gameHeight is globally available
+    x = gameWidth,
+    y = gameHeight,
     w = w,
     h = h,
     img = img
-    --add r later to look like walking?
   }
   setmetatable(instance, aiClass)
   return instance
