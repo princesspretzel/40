@@ -5,23 +5,12 @@ local Feature = require('feature')
 
 function love.load()
   -- game state variables
-  love.window.setTitle('house')
-  love.window.setMode(900, 900)
+  love.window.setMode(0, 0)
   love.graphics.setBackgroundColor(255, 255, 255)
   gameWidth, gameHeight = love.graphics.getDimensions()
-
-  -- TODO: add locks to rooms
-  screens = { 
-    'main',
-    'rainbow', --6 only win condition
-    'field', --5/6
-    'desert', --3/4
-    'tundra', --1/2
-    'void' --0 (lose condition)
-  }
   
   -- globally available actors
-  door = Door('main')
+  door = Door('title')
   ai = Ai()
   controller = Controller()
 end

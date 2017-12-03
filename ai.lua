@@ -3,16 +3,22 @@ local Metric = require('metric')
 local aiClass = { }
 aiClass.__index = aiClass
 
-local heart = Metric('heart', 0)
 local imgFiles = {
   '/images/heart0t.png', '/images/heart1t.png', '/images/heart2t.png', '/images/heart3t.png', '/images/heart4t.png', '/images/heart5t.png', '/images/heart6t.png'
 }
+local heart = Metric('heart', 0, 0, table.getn(imgFiles))
+
 local availableSpots = { }
 
 function Ai()
+  -- create a manipulable copy of the features of the main room
   loadSpots()
+  -- give the door access to the heart metric
+  table.insert(door.metrics, heart)
+  -- define the base image vars  
   local img = love.graphics.newImage('/images/baseheartt.png')
   local w, h = img:getDimensions()
+  -- create the ai instance
   local instance = {
     class = 'ai',
     destination = door, --door is globally available
@@ -75,8 +81,8 @@ function aiClass:movement(dt)
   --movement to a destination spot
   else
     -- close the distance between current position of the center and the destination
-    -- print('self.destination.x: ', self.destination.x)
-    -- print('self.destination.y: ', self.destination.y)
+    print('self.destination.x: ', self.destination.x)
+    print('self.destination.y: ', self.destination.y)
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
     end
@@ -111,9 +117,11 @@ function aiClass:mouseCollision(x, y)
   if ((y <= (self.y + self.h)) and (y >= self.y)) then
     yClick = true
   end
-  if xClick and yClick and self.paused then
+  if xClick and yClick and (door.itemCount > 0 or door:getEgo() < 4) and self.paused then
+    -- TODO: make this more variable
     if (heart.level < table.getn(imgFiles)) then
-      heart:updateLevel(1)
+      heart:upLevel(1)
+      door.itemCount = door.itemCount - 1
       local iFile = imgFiles[heart.level + 1]
       self.img = love.graphics.newImage(iFile)
     end

@@ -4,17 +4,24 @@ local Room = require('room')
 local doorClass = { }
 doorClass.__index = doorClass
 
+-- 0 to 7, so need to -1 for 1-indexing
+-- void is lose condition, rainbow is win condition
+local screensByHeartCount = {'void', 'tundra', 'tundra', 'desert', 'desert', 'field', 'field', 'rainbow'}
+
 function Door(screen)
+  -- load the first room
   local room = Room(screen)
   room:loadRoom()
-
+  -- define the base image vars  
   local img = love.graphics.newImage('/images/doort.png')
-  local w, h = img:getDimensions()
-  
+  local w, h = img:getDimensions()  
+  -- create the door instance
   local instance = {
     class = 'door',
     currentRoom = room,
     unlockedRooms = { },
+    metrics = { },
+    itemCount = 5,
     x = 600,
     y = 600,
     w = w,
@@ -25,9 +32,37 @@ function Door(screen)
   return instance
 end
 
+function doorClass:giveHeart()
+  local egoLevel
+  for idx, metric in ipairs(self.metrics) do
+    if metric.metricType == 'head' then
+      egoLevel = metric.level
+      print('ego level: ', egoLevel)
+    end
+  end
+  if egoLevel < loserLevel
+end
+
+-- needs to balance heart metric and locked rooms to give you an option
+function doorClass:availableRoom()
+  if self.currentRoom.name ~= 'main' then
+    return 'main'
+  else
+    local heartCount
+    for idx, metric in ipairs(self.metrics) do
+      if metric.metricType == 'heart' then
+        heartCount = metric.level
+        print('heart count: ', heartCount)
+      end
+    end
+    print('room you can go in at that heart count: ', screensByHeartCount[heartCount + 1])
+    return screensByHeartCount[heartCount + 1]
+  end
+  print('there is no available room')
+end
+
 -- should be able to use normal features, need a good/ok way to put it in every features table
 function doorClass:isDoorClicked(x, y)
-  print('checking door click')
   if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
     return true
   end
@@ -52,7 +87,8 @@ function doorClass:mouseCollision(x, y)
     self.currentRoom:mouseCollision(x, y)
   end
   if self:isDoorClicked(x, y) then
-    self:enterRoom('rainbow')
+    local option = self:availableRoom()
+    self:enterRoom(option)
   end
 end
 

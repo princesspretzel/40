@@ -31,6 +31,7 @@ function featureClass:mouseCollision(x, y)
   if self.clickable then
     if (x >= self.x and x <= self.x + self.w and y <= self.y and y >= self.y + self.h) then
       print('clicked on ', feature.name)
+      -- TODO: text, 'keep it for youself?' / 'give it to your beautiful roommate'
     end
   end
 end

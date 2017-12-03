@@ -24,16 +24,18 @@ local Rooms = {
       -- Feature('flower2', '/images/flower2t.png', true, true, true, true, 200, 800),
       -- Feature('prettyrock', '/images/prettyrockt.png', true, true, true, true, 500, 500)
   }, desertFeatures = {
-      -- Feature('sandblob', '/images/sandblobt.png', false, true, false, true, 200, 200),
-      -- Feature('camel', '/images/camelt.png', false, true, false, true, 600, 600),
-      -- Feature('uncutecactus', '/images/uncutecactust.png', false, true, false, true, 200, 800),
-      -- Feature('cutecactus', '/images/cutecactust.png', true, true, true, true, 200, 800),
-      -- Feature('shell', '/images/shellt.png', true, true, true, true, 200, 800)
+      Feature('sandblob', '/images/sandblobt.png', false, true, false, true, 500, 300),
+      Feature('dunes', '/images/dunest.png', false, true, false, true, 200, 200),
+      Feature('camel', '/images/camelt.png', false, true, false, true, 300, 300),
+      Feature('uncutecactus', '/images/uncutecactust.png', false, true, false, true, 500, 600),
+      Feature('cutecactus', '/images/cutecactust.png', true, true, true, true, 400, 700),
+      Feature('shell', '/images/shellt.png', true, true, true, true, 300, 800)
   }, tundraFeatures = {
-      -- Feature('grayblob', '/images/grayblobt.png', false, true, false, true, 400, 600),
-      -- Feature('weirdfossil', '/images/weirdfossilt.png', true, true, true, true, 100, 800)
+      Feature('biggergrayblob', '/images/grayblobt.png', false, true, false, true, 700, 300),
+      Feature('grayblob', '/images/grayblobt.png', false, true, false, true, 100, 600),
+      Feature('weirdfossil', '/images/weirdfossilt.png', true, true, true, true, 400, 600)
   }, voidFeatures = {
-      -- Feature('vortex', '/images/vortext.png', false, true, false, true, 350, 750) 
+      Feature('vortex', '/images/vortext.png', false, true, false, true, 350, 750) 
   }
 }
 
