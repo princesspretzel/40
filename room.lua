@@ -4,6 +4,15 @@ local RoomFeatures = require('rooms')
 local roomClass = { }
 roomClass.__index = roomClass
 
+-- counter for lose condition
+local voidClicks = 0
+local voidMessages = {
+  'you have lost',
+  'you didn\'t take care',
+  'you had many chances',
+  'you squandered them all'
+}
+
 function Room(name)
   local instance = {
     class = 'room',
@@ -87,6 +96,14 @@ function roomClass:draw()
 end
 
 function roomClass:mouseCollision(x, y)
+  if self.name == 'void' then
+    voidClicks = voidClicks + 1
+    if (voidClicks <= table.getn(voidMessages)) then
+      love.window.setTitle(voidMessages[voidClicks])
+    else
+      love.window.setTitle('"women should win medals for loving men" --my friend kristen')
+    end
+  end
   for idx, feature in ipairs(self.features) do
     if feature.visible then
       feature:mouseCollision(x, y)
