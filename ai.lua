@@ -11,25 +11,28 @@ local availableSpots = { }
 
 function Ai()
   loadSpots()
+  local img = love.graphics.newImage('/images/baseheartt.png')
+  local w, h = img:getDimensions()
   local instance = {
     class = 'ai',
+    destination = door, --door is globally available
+    paused = false,
+    stop = 0, --no idea how to balance yet 
+    variation = 1, --rng lvl from 1 to length
+    availableSpots = availableSpots,
     x = gameWidth, --gameWidth is globally available
     y = gameHeight, --gameHeight is globally available
-    destination = door, --door is globally available
-    iFile = aiBaseFile,
-    paused = false,
-    stop = 0, -- no idea how to balance yet 
-    variation = 1, -- rng lvl from 1 to length
-    availableSpots = availableSpots,
-    -- add r later to look like walking
+    w = w,
+    h = h,
+    img = img
+    --add r later to look like walking?
   }
   setmetatable(instance, aiClass)
   return instance
 end
 
 function loadSpots()
-  -- state is globally available
-  for idx, feature in ipairs(state.currentRoom.features) do
+  for idx, feature in ipairs(door.currentRoom.features) do
     table.insert(availableSpots, feature)
   end
 end
@@ -37,15 +40,12 @@ end
 function aiClass:findSpot(spot)
   for idx, feature in ipairs(self.availableSpots) do
     if spot.name == feature.name then
-      print('spot name: ', spot.name)
-      print('feature name: ', feature.name)
       return idx
     end
   end
 end
 
--- choose a spot that is not the current spot,
--- or one that has already been visited
+-- choose a spot that is not the current spot, or one that has already been visited
 function aiClass:nextSpot()
   print('number of available spots: ', table.getn(self.availableSpots))
   print('moving towards ', self.destination.name)
@@ -62,21 +62,21 @@ function aiClass:removeLastDestination()
 end
 
 function aiClass:movement(dt)
-  if self.paused then --pausing at a destination spot
+  --pausing at a destination spot
+  if self.paused then
     self.stop = self.stop - dt
-    -- self.stop will never actually be zero except when set
+    -- self.stop will never actually be zero except when set to it
     if self.stop < 0 then
       self.destination = self:nextSpot()
       -- reset the clock
       self.paused = false
       self.stop = 0
     end
-  else --movement to a destination spot
+  --movement to a destination spot
+  else
     -- close the distance between current position of the center and the destination
-    print('self.destination.x: ', self.destination.x)
-    print('self.destination.y: ', self.destination.y)
-    print('self.x: ', self.x)
-    print('self.y: ', self.y)
+    -- print('self.destination.x: ', self.destination.x)
+    -- print('self.destination.y: ', self.destination.y)
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
     end
@@ -105,27 +105,31 @@ end
 function aiClass:mouseCollision(x, y)
   local xClick = false
   local yClick = false
-  if ((x <= (self.x + aiWidth)) and (x >= self.x)) then
+  if ((x <= (self.x + self.w)) and (x >= self.x)) then
     xClick = true
   end
-  if ((y <= (self.y + aiHeight)) and (y >= self.y)) then
+  if ((y <= (self.y + self.h)) and (y >= self.y)) then
     yClick = true
   end
   if xClick and yClick and self.paused then
     if (heart.level < table.getn(imgFiles)) then
       heart:updateLevel(1)
-      self.iFile = imgFiles[heart.level + 1]
+      local iFile = imgFiles[heart.level + 1]
+      self.img = love.graphics.newImage(iFile)
     end
   end
 end
 
 function aiClass:draw()
-  img = love.graphics.newImage(self.iFile)
-  love.graphics.draw(img, self.x, self.y)
+  if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
+    love.graphics.draw(self.img, self.x, self.y)
+  end
 end
 
 function aiClass:update(dt)
-  self:movement(dt)
+  if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
+    self:movement(dt)
+  end
 end
 
 return Ai

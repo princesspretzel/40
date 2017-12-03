@@ -1,7 +1,7 @@
 local Ai = require('ai')
 local Controller = require('controller')
+local Door = require('door')
 local Feature = require('feature')
-local State = require('state')
 
 function love.load()
   -- game state variables
@@ -9,7 +9,6 @@ function love.load()
   love.window.setMode(900, 900)
   love.graphics.setBackgroundColor(255, 255, 255)
   gameWidth, gameHeight = love.graphics.getDimensions()
-  state = State('main')
 
   -- TODO: add locks to rooms
   screens = { 
@@ -20,50 +19,33 @@ function love.load()
     'tundra', --1/2
     'void' --0 (lose condition)
   }
-
-  -- ai presets
-  aiBaseFile = '/images/baseheartt.png'
-  aiImage = love.graphics.newImage(aiBaseFile)
-  aiWidth, aiHeight = aiImage:getDimensions()
-
-  -- controller presets
-  controllerBaseFile = '/images/baseheadt.png'
-  controllerImage = love.graphics.newImage(controllerBaseFile)
-  controllerWidth, controllerHeight = controllerImage:getDimensions() 
-  -- the door has to be available everywhere
-  doorFile = '/images/doort.png'
-  doorImage = love.graphics.newImage(doorFile)
-  doorWidth, doorHeight = doorImage:getDimensions()
-  -- clickable, drawable, not updatable, visible
-  door = Feature('door', doorFile, true, true, false, true, state.width - 300, state.height - 300)
   
-  -- add special actors
+  -- globally available actors
+  door = Door('main')
   ai = Ai()
   controller = Controller()
 end
 
 function love.draw()
-  state:draw()
-  if (state.room == 'main' or state.room == nil) then
+  door:draw()
+  if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     ai:draw()
     controller:draw()
-    door:draw()
   end
 end
 
 function love.mousepressed(x, y, button, istouch)
-  state:mouseCollision(x, y)
-  if (state.room == 'main' or state.room == nil) then
-    if button == 1 then
+  if button == 1 then
+  door:mouseCollision(x, y)
+    if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
       ai:mouseCollision(x, y)
-      door:mouseCollision(x, y)
     end
   end
 end
 
 function love.update(dt)
-  state:update(dt)
-  if (state.room == 'main' or state.room == nil) then
+  door:update(dt)
+  if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     ai:update(dt)
     controller:update(dt)
   end

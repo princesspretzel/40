@@ -42,7 +42,7 @@ function roomClass:loadRoom()
   if self.name == 'field' then
     self.backgroundColorR = 0
     self.backgroundColorG = 200
-    self.backgroundColorB = 0    
+    self.backgroundColorB = 0
     self:loadFeatures(RoomFeatures.fieldFeatures)
   end
   if self.name == 'desert' then
@@ -72,11 +72,10 @@ function roomClass:draw()
   end
 end
 
-function roomClass:mouseCollision(x, y, button, istouch)
-  if button == 1 then
-    for idx, feature in ipairs(self.features) do
-      feature:mouseCollision(x, y)
-    end
+function roomClass:mouseCollision(x, y)
+  print('room mouse collision')
+  for idx, feature in ipairs(self.features) do
+    feature:mouseCollision(x, y)
   end
 end
 

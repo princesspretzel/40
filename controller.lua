@@ -9,22 +9,24 @@ local imgFiles = {
 }
 
 function Controller()
+  local img = love.graphics.newImage('/images/baseheadt.png')
+  local w, h = img:getDimensions() 
   local instance = {
     class = 'controller',
+    thinkingText = '...',
     x = 0,
     y = 0,
-    thinkingText = '...',
-    iFile = controllerBaseFile
+    w = w,
+    h = h,
+    img = img
   }
   setmetatable(instance, controllerClass)
   return instance
 end
 
 function controllerClass:draw()
-  local img = love.graphics.newImage(self.iFile)
-  local imgWidth, _ = img:getDimensions() 
-  love.graphics.draw(img, self.x, self.y)
-  love.graphics.print(self.thinkingText, (self.x + 10 + imgWidth), self.y + 10, 0, 5)
+  love.graphics.draw(self.img, self.x, self.y)
+  love.graphics.print(self.thinkingText, (self.x + 10 + self.w), self.y + 10, 0, 5)
 end
 
 function controllerClass:update()
