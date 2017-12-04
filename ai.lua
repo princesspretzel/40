@@ -4,6 +4,9 @@ local aiClass = { }
 aiClass.__index = aiClass
 
 local imgFiles = { '/images/heart0t.png', '/images/baseheartt.png', '/images/heart1t.png', '/images/heart2t.png', '/images/heart3t.png', '/images/heart4t.png', '/images/heart5t.png', '/images/heart6t.png' }
+
+local imgFlipFiles = { '/images/heart0ft.png', '/images/baseheartft.png', '/images/heart1ft.png', '/images/heart2ft.png', '/images/heart3ft.png', '/images/heart4ft.png', '/images/heart5ft.png', '/images/heart6ft.png' }
+
 local heart = Metric('heart', 0, 1, (table.getn(imgFiles) - 1))
 
 local availableSpots = { }
@@ -21,6 +24,7 @@ function Ai()
   local instance = {
     class = 'ai',
     destination = door,
+    flipped = false,
     paused = false,
     stop = 0,
     variation = 1, --TODO: use this? rng lvl from 1 to length
@@ -74,11 +78,20 @@ function aiClass:heartCheck()
   end
 end
 
+function aiClass:updateImage()
+  local iFile 
+  if self.flipped then
+    iFile = imgFlipFiles[heart.level + 1]
+  else
+    iFile = imgFiles[heart.level + 1]
+  end
+  self.img = love.graphics.newImage(iFile)
+end
+
 function aiClass:heartDecrease()
   if ((heart.level - 1) >= 0) then
     heart:downLevel(1)
-    local iFile = imgFiles[heart.level + 1]
-    self.img = love.graphics.newImage(iFile)
+    self:updateImage()
     self.lastHeartIncrease = 0
   end
 end
@@ -86,12 +99,19 @@ end
 function aiClass:heartIncrease()
   if (heart.level + 1 < table.getn(imgFiles)) then
     heart:upLevel(1)
-    local iFile = imgFiles[heart.level + 1]
-    self.img = love.graphics.newImage(iFile)
+    self:updateImage()
     self.lastHeartIncrease = 0
   end
 end
 
+function aiClass:directionCheck(destinationX)
+  if self.x < destinationX then
+    self.flipped = true
+  else
+    self.flipped = false
+  end
+  self:updateImage()
+end
 -- choose a spot that is not the current spot, or one that has already been visited
 function aiClass:nextSpot()
   print('number of available spots: ', table.getn(self.availableSpots))
@@ -99,7 +119,7 @@ function aiClass:nextSpot()
 
   self:removeLastDestination()
   self:unsetText()
-  self.lastHeartIncrease = self.lastHeartIncrease + 1 
+  self.lastHeartIncrease = self.lastHeartIncrease + 1
   return self.availableSpots[love.math.random(table.getn(self.availableSpots))]
 end
 
@@ -117,6 +137,8 @@ function aiClass:movement(dt)
     -- self.stop will never actually be zero except when set to it
     if self.stop < 0 then
       self.destination = self:nextSpot()
+      -- flip image to face the right way
+      self:directionCheck(self.destination.x)
       -- reset the clock
       self.paused = false
       self.stop = 0
@@ -124,8 +146,8 @@ function aiClass:movement(dt)
   --movement to a destination spot
   else
     -- close the distance between current position of the center and the destination
-    -- print('self.destination.x: ', self.destination.x)
-    -- print('self.destination.y: ', self.destination.y)
+    print('self.destination.x: ', self.destination.x)
+    print('self.destination.y: ', self.destination.y)
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
     end
