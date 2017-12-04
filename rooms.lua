@@ -10,7 +10,7 @@ local Rooms = {
   },
   mainFeatures = {
     Feature('tv', '/images/tvt.png', false, true, false, true, 500, 400),
-    Feature('couch', '/images/coucht.png', false, true, false, true, 50, 200),
+    Feature('couch', '/images/coucht.png', false, true, false, true, 70, 200),
     Feature('trash', '/images/trasht.png', false, true, false, true, 1000, 300),
     Feature('music', '/images/musict.png', false, true, false, true, 100, 400),
     Feature('kitchen', '/images/kitchent.png', false, true, false, true, 700, 550),

@@ -17,7 +17,9 @@ end
 
 function love.draw()
   door:draw()
-  controller:draw()
+  if (door.currentRoom.name ~= 'title') then
+    controller:draw()
+  end
   if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     ai:draw()
   end
@@ -34,8 +36,8 @@ end
 
 function love.update(dt)
   door:update(dt)
+  controller:update(dt)
   if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     ai:update(dt)
-    controller:update(dt)
   end
 end

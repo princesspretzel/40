@@ -57,7 +57,7 @@ function aiClass:setHappyText()
 end
 
 function aiClass:setSadText()
-  self.text = 'i don\'t want do \nthis with you right now'
+  self.text = 'i don\'t want do \nthis with you \nright now'
 end
 
 function aiClass:unsetText()
