@@ -89,7 +89,6 @@ function doorClass:enterRoom(name)
   self.currentRoom = room
   -- load features of the current room
   self.currentRoom:loadRoom()
-  self.currentRoom:turnOnSound()
 end
 
 function doorClass:draw()
