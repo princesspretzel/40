@@ -35,7 +35,6 @@ end
 
 -- returns the number of stops can go by before ai loses a heart
 function doorClass:howManyStopsCanBeIgnored()
-  print('checking how long you can ignore ai')
   for idx, metric in ipairs(self.metrics) do
     if metric.metricType == 'head' then
       ego = metric.level
@@ -44,13 +43,10 @@ function doorClass:howManyStopsCanBeIgnored()
       feeling = metric.level
     end
   end
-  print('ego metric level: ', ego)
-  print('feeling metric level: ', feeling)
   return (ego - feeling)
 end
 
--- TODO: return whether you are giving a treasure or an affection
--- decide whether or not you can increase the heart level
+-- check if you can increase heart count and decrement item if ego (head metric)
 function doorClass:canGiveHeart()
   for idx, metric in ipairs(self.metrics) do
     if metric.metricType == 'head' then
@@ -66,7 +62,7 @@ function doorClass:canGiveHeart()
   end
 end
 
--- needs to balance heart metric and locked rooms to give you an option
+-- gives you the room you can unlock at this level
 function doorClass:availableRoom()
   if self.currentRoom.name ~= 'main' then
     return 'main'
@@ -75,16 +71,13 @@ function doorClass:availableRoom()
     for idx, metric in ipairs(self.metrics) do
       if metric.metricType == 'heart' then
         heartCount = metric.level
-        print('heart count: ', heartCount)
       end
     end
-    print('room you can go in at that heart count: ', screensByHeartCount[heartCount + 1])
     return screensByHeartCount[heartCount + 1]
   end
-  print('there is no available room')
+  print('ERROR: there is no available room')
 end
 
--- should be able to use normal features, need a good/ok way to put it in every features table
 function doorClass:isDoorClicked(x, y)
   if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
     return true
@@ -96,6 +89,7 @@ function doorClass:enterRoom(name)
   self.currentRoom = room
   -- load features of the current room
   self.currentRoom:loadRoom()
+  self.currentRoom:turnOnSound()
 end
 
 function doorClass:draw()

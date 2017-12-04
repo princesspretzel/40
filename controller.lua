@@ -28,20 +28,16 @@ function Controller()
 end
 
 function controllerClass:egoBoost()
-  print('ego boosting')
   if ((head.level + 1) < table.getn(imgFiles)) then
     head:upLevel(1)
-    print('head level: ', head.level)
     local iFile = imgFiles[head.level + 1]
     self.img = love.graphics.newImage(iFile)
   end
 end
 
 function controllerClass:egoControl()
-  print('ego controlling')
   if (head.level > 0) then
     head:downLevel(1)
-    print('head level: ', head.level)
     local iFile = imgFiles[head.level + 1]
     self.img = love.graphics.newImage(iFile)
   end

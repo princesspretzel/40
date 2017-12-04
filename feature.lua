@@ -61,7 +61,6 @@ function featureClass:choiceClick(x, y)
 end
 
 function featureClass:resolveChoiceClick(choice)
-  print('resolving choice')
   if choice == 'keep' then
     controller:egoBoost()
     self.visible = false
@@ -105,7 +104,6 @@ function featureClass:mouseCollision(x, y)
 
     -- if feature choices are unlocked
     if self.choicesLocked ~= true then
-      print('choices are unlocked for ', self.name)
       local choice = self:choiceClick(x, y) --check for choice click, contains conditional to figure out collision
       self:resolveChoiceClick(choice) --resolve choice click
       self.choicesLocked = true --lock choices
@@ -135,11 +133,8 @@ function featureClass:mouseCollision(x, y)
   end
 end
 
---idk
 function featureClass:update(dt)
-  -- if self.updatable then
-  --   print('updatable')
-  -- end
+  --idk
 end
 
 return Feature

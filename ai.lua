@@ -27,7 +27,7 @@ function Ai()
     flipped = false,
     paused = false,
     stop = 0,
-    variation = 1, --TODO: use this? rng lvl from 1 to length
+    variation = 1,
     maxUnclickedStopsBeforeHeartDecrease = initialUnclickedStopsBeforeHeartDecrease,
     availableSpots = availableSpots,
     lastHeartIncrease = 0,
@@ -72,7 +72,6 @@ end
 function aiClass:heartCheck()
   -- factor in the difference between the ego and the feelings
   self.maxUnclickedStopsBeforeHeartDecrease = (initialUnclickedStopsBeforeHeartDecrease - door:howManyStopsCanBeIgnored())
-  print('self.maxUnclickedStopsBeforeHeartDecrease: ', self.maxUnclickedStopsBeforeHeartDecrease)
   if self.lastHeartIncrease > self.maxUnclickedStopsBeforeHeartDecrease then
     self:heartDecrease()
   end
@@ -112,11 +111,9 @@ function aiClass:directionCheck(destinationX)
   end
   self:updateImage()
 end
+
 -- choose a spot that is not the current spot, or one that has already been visited
 function aiClass:nextSpot()
-  print('number of available spots: ', table.getn(self.availableSpots))
-  print('moving towards ', self.destination.name)
-
   self:removeLastDestination()
   self:unsetText()
   self.lastHeartIncrease = self.lastHeartIncrease + 1
@@ -146,8 +143,6 @@ function aiClass:movement(dt)
   --movement to a destination spot
   else
     -- close the distance between current position of the center and the destination
-    print('self.destination.x: ', self.destination.x)
-    print('self.destination.y: ', self.destination.y)
     if (self.destination.x > self.x) then
       self.x = self.x + (self.variation)
     end
