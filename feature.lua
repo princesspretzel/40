@@ -91,6 +91,14 @@ function featureClass:draw()
   end
 end
 
+function featureClass:collisionCheck(x, y)
+  if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
+    return true
+  else
+    return false
+  end
+end
+
 -- setting and unsetting locks on the item and its choices
 function featureClass:mouseCollision(x, y)
   if self.clickable and self.visible then
@@ -106,9 +114,8 @@ function featureClass:mouseCollision(x, y)
 
     -- if feature item is unlocked
     if self.hasChoices and self.itemLocked ~= true then
-      print('item is unlocked for ', self.name)  
-      -- this conditional only checks for collisions between the mouse and the feature, NOT the choice list
-      if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
+      print('item is unlocked for ', self.name)
+      if self:collisionCheck(x, y) then
         self.itemLocked = true --lock feature item
         self.choicesLocked = false --unlock feature choices
       end
@@ -116,8 +123,7 @@ function featureClass:mouseCollision(x, y)
 
     -- toggle text for features with that capability on and off
     if self.text ~= nil then
-      -- TODO: it's gross to repeat this line
-      if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
+      if self:collisionCheck(x, y) then
         if self.clicked then
           self.clicked = false
         else
