@@ -37,7 +37,6 @@ function Room(name)
   return instance
 end
 
--- TODO: could set everything back to "visible"
 -- load features, turn off old sounds
 function roomClass:loadFeatures(featuresTable)
   for idx, feature in ipairs(featuresTable) do

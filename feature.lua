@@ -112,7 +112,6 @@ function featureClass:mouseCollision(x, y)
 
     -- if feature item is unlocked
     if self.hasChoices and self.itemLocked ~= true then
-      print('item is unlocked for ', self.name)
       if self:collisionCheck(x, y) then
         self.itemLocked = true --lock feature item
         self.choicesLocked = false --unlock feature choices
