@@ -1,26 +1,29 @@
 local featureClass = { }
 featureClass.__index = featureClass
 
--- I don't know why the x-axis of the mouse seems so off to me 
+-- TODO: I don't know why the x-axis of the mouse seems so off to me 
 local xWorkAround = 200
 
-function Feature(name, iFile, clickable, drawable, updatable, visible, x, y)
+function Feature(name, iFile, clickable, drawable, updatable, visible, hasChoices, x, y, text)
   local img = love.graphics.newImage(iFile)
   local w, h = img:getDimensions()
   local instance = {
     name = name,
     iFile = iFile, -- maybe get rid of this later
+    clicked = false, --for toggling text
     itemLocked = false,
     choicesLocked = true,
     clickable = clickable,
     drawable = drawable,
     updatable = updatable,
+    hasChoices = hasChoices, --don't need to deal with locking if hasChoices is false
     visible = true,
     x = x,
     y = y,
     w = w,
     h = h,
-    img = img
+    img = img,
+    text = text
   }
   setmetatable(instance, featureClass)
   return instance
@@ -33,6 +36,12 @@ function featureClass:showItemChoices()
   love.graphics.print('keep it for yourself', (self.x + self.w + 10), (self.y + 40))
   love.graphics.print('give it to ybr later', (self.x + self.w + 10), (self.y + 70))
   love.graphics.print('gaze upon it', (self.x + self.w + 10), (self.y + 100))
+  love.graphics.setColor(255, 255, 255)
+end
+
+function featureClass:showText()
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.print(self.text, self.x - 60, self.y + (self.h/2) + 10)
   love.graphics.setColor(255, 255, 255)
 end
 
@@ -77,6 +86,9 @@ function featureClass:draw()
   if self.itemLocked and self.visible then
     self:showItemChoices()
   end
+  if self.clicked then
+    self:showText()
+  end
 end
 
 -- setting and unsetting locks on the item and its choices
@@ -93,12 +105,24 @@ function featureClass:mouseCollision(x, y)
     end
 
     -- if feature item is unlocked
-    if self.itemLocked ~= true then
+    if self.hasChoices and self.itemLocked ~= true then
       print('item is unlocked for ', self.name)  
       -- this conditional only checks for collisions between the mouse and the feature, NOT the choice list
       if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
         self.itemLocked = true --lock feature item
         self.choicesLocked = false --unlock feature choices
+      end
+    end
+
+    -- toggle text for features with that capability on and off
+    if self.text ~= nil then
+      -- TODO: it's gross to repeat this line
+      if (x >= self.x and x <= self.x + self.w and y >= self.y and y <= self.y + self.h) then
+        if self.clicked then
+          self.clicked = false
+        else
+          self.clicked = true
+        end
       end
     end
 

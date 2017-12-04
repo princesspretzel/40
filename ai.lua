@@ -175,7 +175,7 @@ function aiClass:draw()
     love.graphics.draw(self.img, self.x, self.y)
     if self.text then
       love.graphics.setColor(0, 0, 0)
-      love.graphics.print(self.text, self.x - 90, self.y + 40)
+      love.graphics.print(self.text, self.x + 5, self.y - 30)
       love.graphics.setColor(255, 255, 255)
     end
   end
