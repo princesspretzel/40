@@ -53,11 +53,11 @@ function aiClass:findSpot(spot)
 end
 
 function aiClass:setHappyText()
-  self.text = 'it\'s fun to do this together'
+  self.text = 'it\'s fun to do \nthis together'
 end
 
 function aiClass:setSadText()
-  self.text = 'i don\'t want do this with you right now'
+  self.text = 'i don\'t want do \nthis with you right now'
 end
 
 function aiClass:unsetText()
@@ -175,7 +175,7 @@ function aiClass:draw()
     love.graphics.draw(self.img, self.x, self.y)
     if self.text then
       love.graphics.setColor(0, 0, 0)
-      love.graphics.print(self.text, self.x + self.w - 10, self.y + 40)
+      love.graphics.print(self.text, self.x - 90, self.y + 40)
       love.graphics.setColor(255, 255, 255)
     end
   end

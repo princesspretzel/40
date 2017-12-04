@@ -17,9 +17,9 @@ end
 
 function love.draw()
   door:draw()
+  controller:draw()
   if (door.currentRoom.name == 'main' or door.currentRoom.name == nil) then
     ai:draw()
-    controller:draw()
   end
 end
 

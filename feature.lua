@@ -28,8 +28,8 @@ end
 
 function featureClass:showItemChoices()
   love.graphics.setColor(0, 0, 0)
-  love.graphics.print('choose what you want to do with the ', self.x, self.y - 10)
-  love.graphics.print(self.name, self.x, self.y + 10)
+  love.graphics.print('choose what you want to do with the ', self.x, self.y - 30)
+  love.graphics.print(self.name, self.x, self.y - 10)
   love.graphics.print('keep it for yourself', (self.x + self.w + 10), (self.y + 40))
   love.graphics.print('give it to ybr later', (self.x + self.w + 10), (self.y + 70))
   love.graphics.print('gaze upon it', (self.x + self.w + 10), (self.y + 100))

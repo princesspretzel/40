@@ -29,7 +29,7 @@ local Rooms = {
     Feature('flower1', '/images/flower1t.png', true, true, true, true, 700, 100),
     Feature('flower2', '/images/flower2t.png', true, true, true, true, 800, 300),
     Feature('pretty rock', '/images/prettyrockt.png', true, true, true, true, 550, 550),
-    Feature('rose bush', '/images/rosebusht.png', true, true, true, true, 0, 400)
+    Feature('rose bush', '/images/rosebusht.png', false, true, false, true, 0, 400)
   }, desertFeatures = {
     Feature('sandblob', '/images/sandblobt.png', false, true, false, true, 650, 50),
     Feature('dunes', '/images/dunest.png', false, true, false, true, 200, 200),

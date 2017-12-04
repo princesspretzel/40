@@ -13,6 +13,14 @@ local voidMessages = {
   'you squandered them all'
 }
 
+-- sounds
+local titleSound = love.audio.newSource('/sounds/car+driveby2.mp3')
+local voidSound = love.audio.newSource('/sounds/heartbeat.mp3')
+local tundraSound = love.audio.newSource('/sounds/windhowl.mp3')
+local desertSound = love.audio.newSource('/sounds/fire2.mp3')
+local fieldSound = love.audio.newSource('/sounds/rainforestambience.mp3')
+local rainbowSound = love.audio.newSource('/sounds/cheering1.mp3')
+
 function Room(name)
   local instance = {
     class = 'room',
@@ -30,19 +38,33 @@ function Room(name)
 end
 
 -- TODO: could set everything back to "visible"
+-- load features, turn off old sounds
 function roomClass:loadFeatures(featuresTable)
   for idx, feature in ipairs(featuresTable) do
     table.insert(self.features, feature)
   end
 end
 
+--turn off all sounds
+function roomClass:silence()
+  titleSound:stop()
+  voidSound:stop()
+  tundraSound:stop()
+  desertSound:stop()
+  fieldSound:stop()
+  rainbowSound:stop()
+end
+
 function roomClass:loadRoom()
+  self:silence()
   if self.name == 'title' then
     love.window.setTitle('life instructions')
     self.backgroundColorR = 255
     self.backgroundColorG = 255
     self.backgroundColorB = 255
     self:loadFeatures(RoomFeatures.titleFeatures)
+    titleSound:setLooping(true)
+    titleSound:play()
   end
   if self.name == 'main' then
     love.window.setTitle('you are inside your house, hanging out with your beautiful roommate')
@@ -57,12 +79,16 @@ function roomClass:loadRoom()
     self.backgroundColorG = 0
     self.backgroundColorG = 200
     self:loadFeatures(RoomFeatures.rainbowFeatures)
+    rainbowSound:setLooping(true)
+    rainbowSound:play()
   end
   if self.name == 'field' then
     love.window.setTitle('a beautiful field full of beautiful things')
     self.backgroundColorR = 0
     self.backgroundColorG = 200
     self.backgroundColorB = 0
+    fieldSound:setLooping(true)
+    fieldSound:play()
     self:loadFeatures(RoomFeatures.fieldFeatures)
   end
   if self.name == 'desert' then
@@ -70,6 +96,8 @@ function roomClass:loadRoom()
     self.backgroundColorR = 230
     self.backgroundColorG = 240
     self.backgroundColorB = 0 
+    desertSound:setLooping(true)
+    desertSound:play()
     self:loadFeatures(RoomFeatures.desertFeatures)
   end 
   if self.name == 'tundra' then
@@ -77,6 +105,8 @@ function roomClass:loadRoom()
     self.backgroundColorR = 200
     self.backgroundColorG = 200
     self.backgroundColorB = 200 
+    tundraSound:setLooping(true)
+    tundraSound:play()
     self:loadFeatures(RoomFeatures.tundraFeatures)
   end 
   if self.name == 'void' then
@@ -84,6 +114,8 @@ function roomClass:loadRoom()
     self.backgroundColorR = 0
     self.backgroundColorG = 0
     self.backgroundColorB = 0
+    voidSound:setLooping(true)
+    voidSound:play()
     self:loadFeatures(RoomFeatures.voidFeatures)
   end
 end
